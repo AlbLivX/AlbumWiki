@@ -1,0 +1,140 @@
+object dmMain: TdmMain
+  OldCreateOrder = False
+  Height = 490
+  HorizontalOffset = 0
+  VerticalOffset = 0
+  Width = 643
+  object cDatenbank: TUniConnection
+    Connected = True
+    ProviderName = 'InterBase'
+    Database = '/database/livia.fdb'
+    Username = 'sysdba'
+    Server = 'hydbdev1'
+    Left = 80
+    Top = 216
+    EncryptedPassword = '8CFF93FF8AFFCFFFCEFF'
+  end
+  object qAdressen: TUniQuery
+    Connection = cDatenbank
+    SQL.Strings = (
+      'SELECT ID, '
+      '       ALBUM, '
+      '       ARTIST, '
+      '       RELEASEYEAR,'
+      '       DESCRIPTION,'
+      '       ALBUMCOVER'
+      'FROM Album;'
+    )
+    FilterOptions = []
+    Left = 246
+    Top = 129
+  end
+  object sqAdressen: TUniDataSource
+    DataSet = qAdressen
+    Left = 352
+    Top = 128
+  end
+  object qSongs: TUniQuery
+    Connection = cDatenbank
+    SQL.Strings = (
+      'SELECT s.ID, '
+      '       s.SONGTITLE, '
+      '       s.DURATION, '
+      '       a.ID, '
+      '       s.ALBUMID, '
+      '       a.ARTIST, '
+      '       a.RELEASEYEAR,  '
+      '       a.ALBUMCOVER,'
+      '       s.LYRICS'
+      'FROM Songs s'
+      'JOIN Album a ON s.ALBUMID = a.ID'
+      'WHERE s.ALBUMID = :ALBUMID'
+    )
+    FilterOptions = []
+    Left = 246
+    Top = 216
+    ParamData = <    
+      item
+        DataType = ftUnknown
+        Name = 'ALBUMID'
+      end>
+    object qSongsID: TLongintField
+      FieldKind = fkData
+      FieldName = 'ID'
+      Index = 0
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
+    end
+    object qSongsSONGTITLE: TStringField
+      FieldKind = fkData
+      FieldName = 'SONGTITLE'
+      Index = 1
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = True
+      Size = 1020
+    end
+    object qSongsARTIST: TStringField
+      FieldKind = fkData
+      FieldName = 'ARTIST'
+      Index = 2
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+      Size = 400
+    end
+    object qSongsLYRICS: TStringField
+      FieldKind = fkData
+      FieldName = 'LYRICS'
+      Index = 3
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = False
+      Required = False
+      Size = 16000
+    end
+    object qSongsALBUMCOVER: TBlobField
+      FieldKind = fkData
+      FieldName = 'ALBUMCOVER'
+      Index = 4
+      LookupCache = False
+      ProviderFlags = [pfInUpdate, pfInWhere]
+      ReadOnly = True
+      Required = False
+    end
+  end
+  object sqSongs: TUniDataSource
+    DataSet = qSongs
+    Left = 344
+    Top = 216
+  end
+  object qUsers: TUniQuery
+    Connection = cDatenbank
+    SQL.Strings = (
+      'SELECT PWDHASH FROM Users WHERE USERNAME = :username'
+      ''
+    )
+    FilterOptions = []
+    Left = 246
+    Top = 312
+    ParamData = <    
+      item
+        DataType = ftString
+        Name = 'username'
+        ParamType = ptInput
+      end>
+  end
+  object sqUsers: TUniDataSource
+    DataSet = qUsers
+    Left = 344
+    Top = 312
+  end
+  object InterBaseUniProvider1: TInterBaseUniProvider
+    Left = 459
+    Top = 135
+  end
+end
